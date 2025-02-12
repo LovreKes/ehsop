@@ -1,8 +1,28 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dobrodošli u eShop!";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container text-center">
+    <div class="jumbotron bg-light p-5 rounded">
+        <h1 class="display-4 text-primary">Dobrodošli u eShop!</h1>
+        <p class="lead">
+            Kupujte brzo i jednostavno! Pronađite proizvode i dodajte ih u košaricu.
+        </p>
+
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <p class="alert alert-info">
+                <strong>Prijavite se</strong> kako biste vidjeli proizvode i koristili košaricu!
+            </p>
+            <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary btn-lg">Prijava</a>
+            <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-outline-primary btn-lg">Registracija</a>
+        }
+        else
+        {
+            <p class="alert alert-success">
+                <strong>Pozdrav, @User.Identity.Name!</strong> Pregledajte našu ponudu i započnite kupovinu.
+            </p>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-success btn-lg">Pogledaj proizvode</a>
+        }
+    </div>
 </div>

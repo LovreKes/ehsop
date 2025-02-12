@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using eshop.Data;
 using eshop.Models;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace eshop.Controllers
 {
+    [Authorize] // ✅ Ovim zabranjujemo pristup proizvodima ako korisnik nije prijavljen
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -16,21 +18,22 @@ namespace eshop.Controllers
             _context = context;
         }
 
-        // ✅ Prikaz liste proizvoda
+        // ✅ Samo prijavljeni korisnici mogu vidjeti proizvode
         public async Task<IActionResult> Index()
         {
             var products = await _context.Products.ToListAsync();
             return View(products);
         }
 
-        // ✅ Prikaz forme za dodavanje novog proizvoda
+        // ✅ Samo admin može dodavati proizvode
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // ✅ Spremanje novog proizvoda u bazu
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product product)
         {
@@ -43,26 +46,21 @@ namespace eshop.Controllers
             return View(product);
         }
 
-        // ✅ Prikaz forme za uređivanje proizvoda
+        // ✅ Samo admin može uređivati proizvode
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            if (product == null) return NotFound();
             return View(product);
         }
 
-        // ✅ Ažuriranje proizvoda u bazi
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Product product)
         {
-            if (id != product.Id)
-            {
-                return BadRequest();
-            }
+            if (id != product.Id) return BadRequest();
 
             if (ModelState.IsValid)
             {
@@ -73,20 +71,17 @@ namespace eshop.Controllers
             return View(product);
         }
 
-        // ✅ Prikaz stranice za brisanje proizvoda
-        [HttpGet]
+        // ✅ Samo admin može brisati proizvode
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            if (product == null) return NotFound();
             return View(product);
         }
 
-        // ✅ Brisanje proizvoda iz baze
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

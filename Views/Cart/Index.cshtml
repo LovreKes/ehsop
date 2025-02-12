@@ -4,16 +4,26 @@
     ViewData["Title"] = "Vaša košarica";
 }
 
-<h2>Košarica</h2>
+<h2 class="text-center text-primary">Košarica</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
 
 @if (!Model.Any())
 {
-    <p>Vaša košarica je prazna.</p>
+    <p class="text-center">Vaša košarica je prazna.</p>
 }
 else
 {
-    <table class="table">
-        <thead>
+    <table class="table table-striped shadow-sm">
+        <thead class="table-dark">
             <tr>
                 <th>Proizvod</th>
                 <th>Cijena</th>
@@ -28,7 +38,19 @@ else
                 <tr>
                     <td>@(item.Product?.Name ?? "Nepoznato")</td>
                     <td>@((item.Product?.Price ?? 0m).ToString("0.00")) €</td>
-                    <td>@item.Quantity</td>
+                    <td>
+                        <form asp-action="DecreaseQuantity" asp-controller="Cart" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button type="submit" class="btn btn-warning">-</button>
+                        </form>
+
+                        @item.Quantity
+
+                        <form asp-action="IncreaseQuantity" asp-controller="Cart" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button type="submit" class="btn btn-success">+</button>
+                        </form>
+                    </td>
                     <td>@(((item.Product?.Price ?? 0m) * item.Quantity).ToString("0.00")) €</td>
                     <td>
                         <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
@@ -40,4 +62,6 @@ else
             }
         </tbody>
     </table>
+
+    <a asp-action="Checkout" class="btn btn-primary mt-3">Dovrši kupnju</a>
 }

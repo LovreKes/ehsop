@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using eshop.Models; // ✅ Provjeri da namespace odgovara novom nazivu projekta
+using eshop.Models;
 
 namespace eshop.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
-        public DbSet<Product> Products { get; set; }  // ✅ Provjeri da postoji
-        public DbSet<CartItem> CartItems { get; set; }  // ✅ Provjeri da postoji
+        public DbSet<Product> Products { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
     }
 }
