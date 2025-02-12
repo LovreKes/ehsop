@@ -1,0 +1,19 @@
+﻿@model eshop.Models.Product
+
+@{
+    ViewData["Title"] = "Obriši proizvod";
+}
+
+<h2>Jeste li sigurni da želite obrisati ovaj proizvod?</h2>
+
+<div>
+    <h4>@Model.Name</h4>
+    <p>@Model.Description</p>
+    <p>Cijena: @Model.Price.ToString("0.00") €</p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Obriši</button>
+    <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+</form>

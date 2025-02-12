@@ -1,0 +1,43 @@
+﻿@model IEnumerable<eshop.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Vaša košarica";
+}
+
+<h2>Košarica</h2>
+
+@if (!Model.Any())
+{
+    <p>Vaša košarica je prazna.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Proizvod</th>
+                <th>Cijena</th>
+                <th>Količina</th>
+                <th>Ukupno</th>
+                <th>Akcija</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@(item.Product?.Name ?? "Nepoznato")</td>
+                    <td>@((item.Product?.Price ?? 0m).ToString("0.00")) €</td>
+                    <td>@item.Quantity</td>
+                    <td>@(((item.Product?.Price ?? 0m) * item.Quantity).ToString("0.00")) €</td>
+                    <td>
+                        <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button type="submit" class="btn btn-danger">Ukloni</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

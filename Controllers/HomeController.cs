@@ -1,8 +1,8 @@
-using ehsop.Models;
+using eshop.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace ehsop.Controllers
+namespace eshop.Controllers
 {
     public class HomeController : Controller
     {
